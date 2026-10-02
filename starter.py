@@ -30,3 +30,35 @@ def load_kitti_calibration(path):
     calib['Tr_velo_to_cam'] = calib['Tr_velo_to_cam'].reshape(3, 4)
     
     return calib
+
+def load_kitti_labels(path):
+    """
+    Loads KITTI-style object detection labels from a .txt file,
+    and filters for 'Car' objects.
+
+    Args:
+        path (str): The file path to the label file.
+
+    Returns:
+        list[dict]: A list of dictionaries, where each dictionary
+                    represents a detected 'Car' object and its 2D bbox.
+    """
+    objects = []
+    with open(path, 'r') as f:
+        for line in f:
+            parts = line.strip().split()
+            obj_type = parts[0]
+            
+            # For this assignment, we primarily care about cars.
+            if obj_type.lower() == 'car':
+                bbox = {
+                    'type': obj_type,
+                    'bbox_2d': np.array([
+                        float(parts[4]), # x1 (left)
+                        float(parts[5]), # y1 (top)
+                        float(parts[6]), # x2 (right)
+                        float(parts[7])  # y2 (bottom)
+                    ])
+                }
+                objects.append(bbox)
+    return objects
