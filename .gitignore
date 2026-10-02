@@ -1,2 +1,5 @@
 .env/
 training/
+test.py
+*.mp4
+__pycache__/
